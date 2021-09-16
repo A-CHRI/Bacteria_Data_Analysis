@@ -1,5 +1,5 @@
 import math
-from matplotlib import container, pyplot as plt
+from matplotlib import pyplot as plt
 
 def dataLoad (filename):
     data = []
