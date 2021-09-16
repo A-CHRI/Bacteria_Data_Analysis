@@ -1,4 +1,3 @@
-from os import stat
 import math
 from matplotlib import container, pyplot as plt
 
