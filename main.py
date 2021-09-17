@@ -82,10 +82,7 @@ def dataStatistics(data, statistic):
 
 def dataPlot(data):
     # Number of bacteria
-    c_1 = 0
-    c_2 = 0
-    c_3 = 0
-    c_4 = 0
+    c_1,c_2,c_3,c_4 = 0,0,0,0
     for x in data:
         if int(x[2]) == 1: c_1 += 1
         if int(x[2]) == 2: c_2 += 1
