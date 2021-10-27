@@ -24,63 +24,37 @@ def dataLoad (filename):
     return data
 
 def dataStatistics(data, statistic):
-    if statistic == "Mean Temperature":
-        sum = 0
-        count = 0
-        for x in data:
-            sum += float(x[0])
-            count += 1
-        return sum / count
+    if np.shape(data)[0] < 1:
+        return 0
 
-    if statistic == "Mean Growth Rate":
-        sum = 0
-        count = 0
-        for x in data:
-            sum += float(x[1])
-            count += 1
-        return sum / count
+    if statistic == "Mean Temperature":
+        return np.mean(data, axis=0)[0]
+
+    if statistic == "Mean Growth rate":
+        return np.mean(data, axis=0)[1]
 
     if statistic == "Std Temperature":
-        sum = 0
-        total = 0
-        for x in data:
-            sum += (float(x[0]) - dataStatistics(data, "Mean Temperature"))**2
-            total += 1
-        return math.sqrt(sum / total)
+        return np.std(data, axis=0)[0]
 
-    if statistic == "Std Growth Rate":
-        sum = 0
-        total = 0
-        for x in data:
-            sum += (float(x[1]) - dataStatistics(data, "Mean Growth Rate"))**2
-            total += 1
-        return math.sqrt(sum / total)
+    if statistic == "Std Growth rate":
+        return np.std(data, axis=0)[1]
 
     if statistic == "Rows":
-        count = 0
-        for x in data:
-            count += 1
-        return count
+        return np.shape(data)[0]
 
-    if statistic == "Mean Cold Growth Rate":
-        sum = 0
-        count = 0
-        for x in data:
-            if float(x[0]) < 20:
-                sum += float(x[1])
-                count += 1
-        if count > 0: return sum / count
-        else: return 0
+    if statistic == "Mean Cold Growth rate":
+        colddata = data[np.where(data[:, 0] < 20)]
+        if np.shape(colddata)[0] > 0:
+            return np.mean(colddata, axis=0)[1]
+        else:
+            return 0
 
-    if statistic == "Mean Hot Growth Rate":
-        sum = 0
-        count = 0
-        for x in data:
-            if float(x[0]) > 50:
-                sum += float(x[1])
-                count += 1
-        if count > 0: return sum / count
-        else: return 0
+    if statistic == "Mean Hot Growth rate":
+        hotdata = data[np.where(data[:, 0] > 50)]
+        if np.shape(hotdata)[0] > 0:
+            return np.mean(hotdata, axis=0)[1]
+        else:
+            return 0
 
 def dataPlot(data):
     # Number of bacteria
