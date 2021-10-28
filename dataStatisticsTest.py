@@ -33,6 +33,26 @@ def dataStatistics(data, statistic):
         else:
             return 0
 
+# Test scenario
 data = np.array([[11, 0.560, 2], [12, 0.777, 1]])
 
-print(dataStatistics(data, "Std Growth rate"))
+mt = dataStatistics(data, "Mean Temperature")
+print(f"Mean Temperature: {mt}")
+
+mgr = dataStatistics(data, "Mean Growth Rate")
+print(f"Mean Growth Rate: {mgr}")
+
+st = dataStatistics(data, "Std Temperature")
+print(f"Std Temperature: {st}")
+
+sgr = dataStatistics(data, "Std Growth Rate")
+print(f"Std Growth Rate: {sgr}")
+
+rows = dataStatistics(data, "Rows")
+print(f"Rows: {rows}")
+
+mcgr = dataStatistics(data, "Mean Cold Growth Rate")
+print(f"Mean Cold Growth Rate: {mcgr}")
+
+mhgr = dataStatistics(data, "Mean Hot Growth Rate")
+print(f"Mean Hot Growth Rate: {mhgr}")

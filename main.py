@@ -111,39 +111,3 @@ if __name__ == '__main__':
             continue
         if choice == "5":
             break
-
-
-    # Test scenarios
-    print("--- TEST: dataLoad function ---")
-    file = "fil.txt"
-    data = dataLoad(file)
-    for x in data:
-        for y in x:
-            print(y, end = " ")
-        print()
-
-    print("--- TEST: Statistics function ---")
-
-    mt = dataStatistics(data, "Mean Temperature")
-    print(f"Mean Temperature: {mt}")
-
-    mgr = dataStatistics(data, "Mean Growth Rate")
-    print(f"Mean Growth Rate: {mgr}")
-
-    st = dataStatistics(data, "Std Temperature")
-    print(f"Std Temperature: {st}")
-
-    sgr = dataStatistics(data, "Std Growth Rate")
-    print(f"Std Growth Rate: {sgr}")
-
-    rows = dataStatistics(data, "Rows")
-    print(f"Rows: {rows}")
-
-    mcgr = dataStatistics(data, "Mean Cold Growth Rate")
-    print(f"Mean Cold Growth Rate: {mcgr}")
-
-    mhgr = dataStatistics(data, "Mean Hot Growth Rate")
-    print(f"Mean Hot Growth Rate: {mhgr}")
-
-    print("--- TEST: dataPlot function ---")
-    dataPlot(data)
