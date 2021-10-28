@@ -1,11 +1,14 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+data1 = np.empty((0,3))
+
 def dataLoad (filename):
     data = np.empty((0,3))
     n = 0
     with open(filename, "r") as f:
         fs = f.read().splitlines()
+        f.close
         for line in fs:
             n += 1
             bacteria = np.array(line.split(' '))
@@ -79,39 +82,53 @@ def dataPlot(data):
     graph.set_ylabel("Growth Rate")
     plt.show()
 
+def tryLoad():
+    filename = input("Please input the filename including .txt (ex. file.txt):\n")
+    try:
+        dataLoad(filename)
+    except:
+        print("Ineligible filename.")
+        return tryLoad()
+    print("\nData has been loaded into the program.\n")
+    return dataLoad(filename)
+
+def tryStats(data):
+    inp = input("Please input the statistic you want to have calculated by entering the corresponding number. Your options are as follows:\n1. Mean Temperature.\n2. Mean Growth rate.\n3. Standard deviation of Temperature.\n4. Standard deviation of Growth rate.\n5. Number of samples.\n6. Mean Growth rate for cold samples.\n7. Mean Growth rate for hot samples.\n")
+    statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
+    print(data)
+    try:
+        print(dataStatistics(data, statistics[int(inp)-1]) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
+    except:
+        print("Ineligible input, or lack of loaded data.\n")
+        
+
+
+def menu():
+    choice = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
+    if choice == "1":
+        data1 = tryLoad()
+        menu()
+    if choice == "2":
+        # Filter
+        menu()
+    if choice == "3":
+        tryStats(data1)
+        menu()
+    if choice == "4":
+        try:
+            dataPlot(data1)
+        except:
+            print("No eligible data to plot, please load data first.\n")
+            menu()
+    if choice == "5":
+        return
+
+
+
 # Main Script
 if __name__ == '__main__':
-    while True:
-        data = np.empty((0,3))
-        choice = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
-        if choice == "1":
-            filename = input("Please input the filename including .txt (ex. file.txt):\n")
-            try:
-                data = dataLoad(filename)
-            except:
-                print("Ineligible filename.")
-                continue
-            data = dataLoad(filename)
-            print("\nData has been loaded into the program.\n")
-            continue
-        if choice == "2":
-            # Filter
-            continue
-        if choice == "3":
-            inp = input("Please input the statistic you want to have calculated by entering the corresponding number. Your options are as follows:\n1. Mean Temperature.\n2. Mean Growth rate.\n3. Standard deviation of Temperature.\n4. Standard deviation of Growth rate.\n5. Number of samples.\n6. Mean Growth rate for cold samples.\n7. Mean Growth rate for hot samples.\n")
-            statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
-            print(data)
-            try:
-                print(dataStatistics(data, statistics[int(inp)-1]) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
-            except:
-                print("Ineligible input, or lack of loaded data.")
-            continue
-        if choice == "4":
-            dataPlot(data)
-            continue
-        if choice == "5":
-            break
-
+    menu()
+        
 
     # Test scenarios
     print("--- TEST: dataLoad function ---")
