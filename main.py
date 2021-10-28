@@ -4,15 +4,22 @@ from matplotlib import pyplot as plt
 data1 = np.empty((0,3))
 
 def dataLoad (filename):
+    #Create empty matrix of correct dimensions, set number to give linenumber for errors in the data
     data = np.empty((0,3))
     n = 0
+
+    #Open the file, make list with each line of text, close the file
     with open(filename, "r") as f:
         fs = f.read().splitlines()
         f.close
+        
         for line in fs:
+            #Add 1 to the line-counter, split each element in the line of data into a new array, convert everything to float.
             n += 1
             bacteria = np.array(line.split(' '))
             bacteria = bacteria.astype(float)
+
+            #If the data is anomalous, print corresponding error-code, go to next element in for-loop
             if bacteria[0] < 10 or bacteria[0] > 60:
                 print(f"Error: Temperature exeeds limit (Line {n})")
                 continue
@@ -22,38 +29,51 @@ def dataLoad (filename):
             if bacteria[2] not in [1,2,3,4]:
                 print(f"Error: Unknown bacteria (Line {n})")
                 continue
+            #Add the new array to the matrix
             data = np.append(data, np.array([bacteria]), axis=0)
     return data
     
 
 def dataStatistics(data, statistic):
+    #If there are no rows in the data, return 0
     if np.shape(data)[0] < 1:
         return 0
 
+    #If mean temp is to be computed, return mean temp
     if statistic == "Mean Temperature":
         return np.mean(data, axis=0)[0]
 
+    #If mean growth rate is to be computed, return mean growth rate
     if statistic == "Mean Growth rate":
         return np.mean(data, axis=0)[1]
 
+    #If std of temp is to be computed, return std of temp
     if statistic == "Std Temperature":
         return np.std(data, axis=0)[0]
 
+    #If std of growth rate is to be computed, return std of growth rate
     if statistic == "Std Growth rate":
         return np.std(data, axis=0)[1]
 
+    #If rows are to be computed, return rows
     if statistic == "Rows":
         return np.shape(data)[0]
 
+    #If mean growth rate of cold samples is to be computed, choose cold samples
     if statistic == "Mean Cold Growth rate":
         colddata = data[np.where(data[:, 0] < 20)]
+        
+        #If there are no cold samples, return 0, otherwise return mean growth rate of the cold samples
         if np.shape(colddata)[0] > 0:
             return np.mean(colddata, axis=0)[1]
         else:
             return 0
 
+    #If mean growth rate of hot samples is to be computed, choose hot samples
     if statistic == "Mean Hot Growth rate":
         hotdata = data[np.where(data[:, 0] > 50)]
+
+        #If there are no hot samples, return 0, otherwise return mean growth rate of the hot samples
         if np.shape(hotdata)[0] > 0:
             return np.mean(hotdata, axis=0)[1]
         else:
@@ -61,24 +81,37 @@ def dataStatistics(data, statistic):
 
 
 def dataPlot(data):
-    # Number of bacteria
+    #Count sample size for each bacteria
     c_1 = np.count_nonzero(data[:, 2] == 1)
     c_2 = np.count_nonzero(data[:, 2] == 2)
     c_3 = np.count_nonzero(data[:, 2] == 3)
     c_4 = np.count_nonzero(data[:, 2] == 4)
 
+    #Start subplot for bar-chart
     bar = plt.subplots()[1]
+
+    #List names of bacteria, and names for x- and y-axis
     names = ["Salmonella\nenterica", "Bascillus cereus", "Listeria", "Brochothrix\nthermosphacta"]
     bar.set_xlabel("Bacteria Type")
     bar.set_ylabel("Number of samples")
+
+    #Plot and show the bar-chart
     plt.bar(names, [c_1, c_2, c_3, c_4])
 
-    # Growth Rate by Temperature
+    # Start subplot for Growth Rate by Temperature
     graph = plt.subplots()[1]
+
+    #Set axis sizes
     plt.axis([10,60,0,1.5])
+
+    #Sort the data after temperature
     datasort = data[np.argsort(data[:, 0])]
+
+    #Plot each type of bacteria with points and graph, add color-label
     for i in range(4):
         plt.plot(datasort[np.where(datasort[:, 2] == i+1)][:, 0], datasort[np.where(datasort[:, 2] == i+1)][:, 1], marker='o', label=str(names[i]))
+
+    #Show color-labels, set names for x- and y-axis, and plot/show the graph
     plt.legend()
     graph.set_xlabel("Temperature")
     graph.set_ylabel("Growth Rate")
