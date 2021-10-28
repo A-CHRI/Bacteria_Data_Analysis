@@ -24,6 +24,7 @@ def dataLoad (filename):
                 continue
             data = np.append(data, np.array([bacteria]), axis=0)
     return data
+    
 
 def dataStatistics(data, statistic):
     if np.shape(data)[0] < 1:
@@ -58,6 +59,7 @@ def dataStatistics(data, statistic):
         else:
             return 0
 
+
 def dataPlot(data):
     # Number of bacteria
     c_1 = np.count_nonzero(data[:, 2] == 1)
@@ -82,6 +84,7 @@ def dataPlot(data):
     graph.set_ylabel("Growth Rate")
     plt.show()
 
+
 def tryLoad():
     filename = input("Please input the filename including .txt (ex. file.txt):\n")
     try:
@@ -99,8 +102,7 @@ def tryStats(data):
     try:
         print(dataStatistics(data, statistics[int(inp)-1]) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
     except:
-        print("Ineligible input, or lack of loaded data.\n")
-        
+        print("Ineligible input, or lack of loaded data.\n") 
 
 
 def menu():
@@ -122,7 +124,6 @@ def menu():
             menu()
     if choice == "5":
         return
-
 
 
 # Main Script
