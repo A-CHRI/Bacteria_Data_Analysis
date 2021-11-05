@@ -1,8 +1,7 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-data1 = np.empty((0,3))
-
+#This method takes a string as parameter, and reads a file based on the given string, then returns a matrix of data read from the string
 def dataLoad (filename):
     #Create empty matrix of correct dimensions, set number to give linenumber for errors in the data
     data = np.empty((0,3))
@@ -33,7 +32,7 @@ def dataLoad (filename):
             data = np.append(data, np.array([bacteria]), axis=0)
     return data
     
-
+#This method takes a nx3 matrix of data and a string as parameter, and returns a statistic from the data. Which statistic gets returned is based on the string
 def dataStatistics(data, statistic):
     #If there are no rows in the data, return 0
     if np.shape(data)[0] < 1:
@@ -62,7 +61,6 @@ def dataStatistics(data, statistic):
     #If mean growth rate of cold samples is to be computed, choose cold samples
     if statistic == "Mean Cold Growth rate":
         colddata = data[np.where(data[:, 0] < 20)]
-        
         #If there are no cold samples, return 0, otherwise return mean growth rate of the cold samples
         if np.shape(colddata)[0] > 0:
             return np.mean(colddata, axis=0)[1]
@@ -72,14 +70,13 @@ def dataStatistics(data, statistic):
     #If mean growth rate of hot samples is to be computed, choose hot samples
     if statistic == "Mean Hot Growth rate":
         hotdata = data[np.where(data[:, 0] > 50)]
-
         #If there are no hot samples, return 0, otherwise return mean growth rate of the hot samples
         if np.shape(hotdata)[0] > 0:
             return np.mean(hotdata, axis=0)[1]
         else:
             return 0
 
-
+#This method takes a nx3 matrix of data as parameter, and makes 2 plots of the data, 1 barchart of the bacteria types, 1 graph of the ratio between temperature and growth rate
 def dataPlot(data):
     #Count sample size for each bacteria
     c_1 = np.count_nonzero(data[:, 2] == 1)
@@ -140,22 +137,31 @@ def filter(data):
         print("Invalid input.")
     return data
 
+#This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
 def tryLoad():
+    #Get the users input
     filename = input("Please input the filename including .txt (ex. file.txt):\n")
+    #Try to load the file
     try:
-        dataLoad(filename)
+        data = dataLoad(filename)
+        #In case this works, notify the user, return the loaded data
+        print("\nData has been loaded into the program.\n")
+        return data
     except:
+        #In case it doesnt work, print that the input was ineligible
         print("Ineligible filename.")
-        return tryLoad()
-    print("\nData has been loaded into the program.\n")
-    return dataLoad(filename)
 
+
+#This method tries to use the dataStatistics method, and in case the user doesnt give a suitable input, catch the error
 def tryStats(data):
+    #Get the users input, make a list with the statistic names
     inp = input("Please input the statistic you want to have calculated by entering the corresponding number. Your options are as follows:\n1. Mean Temperature.\n2. Mean Growth rate.\n3. Standard deviation of Temperature.\n4. Standard deviation of Growth rate.\n5. Number of samples.\n6. Mean Growth rate for cold samples.\n7. Mean Growth rate for hot samples.\n")
     statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
+    #Try to get the statistic based on the input, and print it out if it works
     try:
         print(str(dataStatistics(data, f"{statistics[int(inp)-1]}")) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
     except:
+        #In case it doesnt work, print that the input was ineligible
         print("Ineligible input.\n") 
     
 
