@@ -117,6 +117,28 @@ def dataPlot(data):
     graph.set_ylabel("Growth Rate")
     plt.show()
 
+def filter(data):
+    print("How would you like to filter your data? Choose by writing the corresponding number.")
+    filterInput = input("1. By bacteria.\n2. By Growth rate\n3. By Temperature\n")
+    if int(filterInput) == 1:
+        bactType = input("Which bacteria type would you like to see? Choose by writing the corresponding number, you may choose several by seperating the numbers with space.\n1. Salmonella enterica\n2. Bascillus cereus\n3. Listeria\n4. Brochothrix thermosphacta\n")
+        bactTypeList = np.array(bactType.split(" "))
+        bactTypeList = bactTypeList.astype(float)
+        mask = np.isin(data[:,2], bactTypeList)
+        data = data[mask]
+    elif int(filterInput) == 2:
+        growthInterval = input("What are the lower and upper bound for the Growth rate you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
+        growthIntervalList = np.array(growthInterval.split(" "))
+        growthIntervalList = growthIntervalList.astype(float)
+        data = data[:][(data[:,1] >= growthIntervalList[0]) & (data[:,1] <= growthIntervalList[1])]
+    elif int(filterInput) == 3:
+        tempInterval = input("What are the lower and upper bound for the Temperature you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
+        tempIntervalList = np.array(tempInterval.split(" "))
+        tempIntervalList = tempIntervalList.astype(float)
+        data = data[:][(data[:,0] >= tempIntervalList[0]) & (data[:,0] <= tempIntervalList[1])]
+    else:
+        print("Invalid input.")
+    return data
 
 def tryLoad():
     filename = input("Please input the filename including .txt (ex. file.txt):\n")
@@ -131,14 +153,11 @@ def tryLoad():
 def tryStats(data):
     inp = input("Please input the statistic you want to have calculated by entering the corresponding number. Your options are as follows:\n1. Mean Temperature.\n2. Mean Growth rate.\n3. Standard deviation of Temperature.\n4. Standard deviation of Growth rate.\n5. Number of samples.\n6. Mean Growth rate for cold samples.\n7. Mean Growth rate for hot samples.\n")
     statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
-    print(statistics[int(inp)-1])
-    print(data)
-    print(dataStatistics(data, f"{statistics[int(inp)-1]}"))
     try:
-        
-        print(str(dataStatistics(data, f"{statistics[int(inp)-1]}") + " is the computed " + str(statistics[int(inp)-1]) + "\n"))
+        print(str(dataStatistics(data, f"{statistics[int(inp)-1]}")) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
     except:
-        print("Ineligible input, or lack of loaded data.\n") 
+        print("Ineligible input.\n") 
+    
 
 
 def menu(data):
@@ -147,7 +166,7 @@ def menu(data):
         data = tryLoad()
         menu(data)
     if choice == "2":
-        # Filter
+        data = filter(data)
         menu(data)
     if choice == "3":
         tryStats(data)
