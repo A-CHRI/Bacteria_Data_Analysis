@@ -47,7 +47,7 @@ def dataStatistics(data, statistic):
             return 0
 
 # Test scenario
-data = np.array([[11, 0.560, 2], [12, 0.777, 1]])
+data = np.array([[25.,     0.109,  1.   ],[20.,     0.096,  2.   ],[15.,     0.517,  3.   ],[35.,     1.086,  4.   ],[40.,     0.934,  2.   ],[35. ,    0.109,  1.   ]])
 
 mt = dataStatistics(data, "Mean Temperature")
 print(f"Mean Temperature: {mt}")

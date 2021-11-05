@@ -131,36 +131,39 @@ def tryLoad():
 def tryStats(data):
     inp = input("Please input the statistic you want to have calculated by entering the corresponding number. Your options are as follows:\n1. Mean Temperature.\n2. Mean Growth rate.\n3. Standard deviation of Temperature.\n4. Standard deviation of Growth rate.\n5. Number of samples.\n6. Mean Growth rate for cold samples.\n7. Mean Growth rate for hot samples.\n")
     statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
+    print(statistics[int(inp)-1])
     print(data)
+    print(dataStatistics(data, f"{statistics[int(inp)-1]}"))
     try:
-        print(dataStatistics(data, statistics[int(inp)-1]) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
+        
+        print(str(dataStatistics(data, f"{statistics[int(inp)-1]}") + " is the computed " + str(statistics[int(inp)-1]) + "\n"))
     except:
         print("Ineligible input, or lack of loaded data.\n") 
 
 
-def menu():
+def menu(data):
     choice = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
     if choice == "1":
-        data1 = tryLoad()
-        menu()
+        data = tryLoad()
+        menu(data)
     if choice == "2":
         # Filter
-        menu()
+        menu(data)
     if choice == "3":
-        tryStats(data1)
-        menu()
+        tryStats(data)
+        menu(data)
     if choice == "4":
         try:
-            dataPlot(data1)
+            dataPlot(data)
+            menu(data)
         except:
             print("No eligible data to plot, please load data first.\n")
-            menu()
+            menu(data)
     if choice == "5":
         return
 
 
 # Main Script
 if __name__ == '__main__':
-    while True:
-        print("Do work")
-        break
+    data1 = np.empty((0,3))
+    menu(data1)
