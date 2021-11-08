@@ -147,11 +147,16 @@ def filter(data):
             data = data[:][(data[:,0] >= tempIntervalList[0]) & (data[:,0] <= tempIntervalList[1])]
             print("Your data has been filtered successfully.")
         else:
-            #If their choice was another integer than 1-3, print invalid input
-            print("Invalid input.")
+            #If their choice was another integer than 1-3, print invalid input, give a choice to try again
+            inp = input("Invalid input. Would you like to try again? (y/n)\n")
+            if inp.casefold() == "y":
+                data = filter(data)
     except:
-        #If any of the inputs were formatted incorrectly, catch the resulting error, and print invalid input
-        print("Invalid input.")
+        #If any of the inputs were formatted incorrectly, catch the resulting error, and print invalid input, give a choice to try again
+        print("lmao")
+        inp = input("Invalid input. Would you like to try again? (y/n)\n")
+        if inp.casefold() == "y":
+            data = filter(data)
     #Return the filtered (or unfiltered) data
     return data
 
@@ -166,9 +171,10 @@ def tryLoad():
         print("\nData has been loaded into the program.\n")
         return data
     except:
-        #In case it doesnt work, print that the input was ineligible
-        print("Ineligible filename.")
-
+        #In case it doesnt work, print that the input was ineligible, and an option to give another input
+        inp = input("Ineligible filename. Would you like to try again? (y/n)\n")
+        if inp.casefold() == "y":
+            return tryLoad()
 
 #This method tries to use the dataStatistics method, and in case the user doesnt give a suitable input, catch the error
 def tryStats(data):
@@ -179,8 +185,11 @@ def tryStats(data):
     try:
         print(str(dataStatistics(data, f"{statistics[int(inp)-1]}")) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
     except:
-        #In case it doesnt work, print that the input was ineligible
-        print("Ineligible input.\n") 
+        #In case it doesnt work, print that the input was ineligible, and an option to give another input
+        inp = input("Ineligible input or missing dataset. Would you like to try again? (y/n)\n") 
+        if inp.casefold() == "y":
+            tryStats(data)
+
     
 
 #Old function to make the interface before we read that the interface couldn't be made as a function.
