@@ -153,7 +153,6 @@ def filter(data):
                 data = filter(data)
     except:
         #If any of the inputs were formatted incorrectly, catch the resulting error, and print invalid input, give a choice to try again
-        print("lmao")
         inp = input("Invalid input. Would you like to try again? (y/n)\n")
         if inp.casefold() == "y":
             data = filter(data)
