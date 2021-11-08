@@ -114,27 +114,46 @@ def dataPlot(data):
     graph.set_ylabel("Growth Rate")
     plt.show()
 
+#This method takes a nx3 matrix of data as parameter, and filters the data based upon input from the user
 def filter(data):
+    #Get the users input on how the data should be filtered
     print("How would you like to filter your data? Choose by writing the corresponding number.")
     filterInput = input("1. By bacteria.\n2. By Growth rate\n3. By Temperature\n")
-    if int(filterInput) == 1:
-        bactType = input("Which bacteria type would you like to see? Choose by writing the corresponding number, you may choose several by seperating the numbers with space.\n1. Salmonella enterica\n2. Bascillus cereus\n3. Listeria\n4. Brochothrix thermosphacta\n")
-        bactTypeList = np.array(bactType.split(" "))
-        bactTypeList = bactTypeList.astype(float)
-        mask = np.isin(data[:,2], bactTypeList)
-        data = data[mask]
-    elif int(filterInput) == 2:
-        growthInterval = input("What are the lower and upper bound for the Growth rate you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
-        growthIntervalList = np.array(growthInterval.split(" "))
-        growthIntervalList = growthIntervalList.astype(float)
-        data = data[:][(data[:,1] >= growthIntervalList[0]) & (data[:,1] <= growthIntervalList[1])]
-    elif int(filterInput) == 3:
-        tempInterval = input("What are the lower and upper bound for the Temperature you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
-        tempIntervalList = np.array(tempInterval.split(" "))
-        tempIntervalList = tempIntervalList.astype(float)
-        data = data[:][(data[:,0] >= tempIntervalList[0]) & (data[:,0] <= tempIntervalList[1])]
-    else:
+    #Here we make sure to catch any error based on input formatted wrong
+    try: 
+        if int(filterInput) == 1:
+            #If the user chose to filter the data by bacteria type, get their input on which bacteria types should be included, put the choices into an array
+            bactType = input("Which bacteria type would you like to see? Choose by writing the corresponding number, you may choose several by seperating the numbers with space.\n1. Salmonella enterica\n2. Bascillus cereus\n3. Listeria\n4. Brochothrix thermosphacta\n")
+            bactTypeList = np.array(bactType.split(" "))
+            bactTypeList = bactTypeList.astype(float)
+            #Check if each element in the 3rd column of the data are in the list of chosen types, save a copy of the list with true/false values for each of the elements based on whether they were chosen or not
+            mask = np.isin(data[:,2], bactTypeList)
+            #Save the rows of data with true values in the mask-list, remove the rows with false values, print that the filter was applied
+            data = data[mask]
+            print("Your data has been filtered successfully.")
+        elif int(filterInput) == 2:
+            #If the user chose to filter the data by a growth rate interval, get their input on what interval should be included, put the lower and upper bound into a list
+            growthInterval = input("What are the lower and upper bound for the Growth rate you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
+            growthIntervalList = np.array(growthInterval.split(" "))
+            growthIntervalList = growthIntervalList.astype(float)
+            #Save the rows of data with values in the second column between the bounds of the interval, remove the other rows, print that the filter was applied
+            data = data[:][(data[:,1] >= growthIntervalList[0]) & (data[:,1] <= growthIntervalList[1])]
+            print("Your data has been filtered successfully.")
+        elif int(filterInput) == 3:
+            #If the user chose to filter the data by a temperature interval, get their input on what interval should be included, put the lower and upper bound into a list
+            tempInterval = input("What are the lower and upper bound for the Temperature you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
+            tempIntervalList = np.array(tempInterval.split(" "))
+            tempIntervalList = tempIntervalList.astype(float)
+            #Save the rows of data with values in the first column between the bounds of the interval, remove the other rows, print that the filter was applied
+            data = data[:][(data[:,0] >= tempIntervalList[0]) & (data[:,0] <= tempIntervalList[1])]
+            print("Your data has been filtered successfully.")
+        else:
+            #If their choice was another integer than 1-3, print invalid input
+            print("Invalid input.")
+    except:
+        #If any of the inputs were formatted incorrectly, catch the resulting error, and print invalid input
         print("Invalid input.")
+    #Return the filtered (or unfiltered) data
     return data
 
 #This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
@@ -184,7 +203,7 @@ def menu(data):
         except:
             print("No eligible data to plot, please load data first.\n")
             menu(data)
-    if choice == "5":
+    else:
         return
 
 
