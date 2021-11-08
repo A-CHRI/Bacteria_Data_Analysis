@@ -10,7 +10,6 @@ def dataLoad (filename):
     #Open the file, make list with each line of text, close the file
     with open(filename, "r") as f:
         fs = f.read().splitlines()
-        f.close
         
         for line in fs:
             #Add 1 to the line-counter, split each element in the line of data into a new array, convert everything to float.
@@ -184,7 +183,7 @@ def tryStats(data):
         print("Ineligible input.\n") 
     
 
-
+#Old function to make the interface before we read that the interface couldn't be made as a function.
 def menu(data):
     choice = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
     if choice == "1":
@@ -207,7 +206,33 @@ def menu(data):
         return
 
 
-# Main Script
+#Main Script, only runs if the file is run directly, this isn't executed if the file is imported to use as a library
 if __name__ == '__main__':
-    data1 = np.empty((0,3))
-    menu(data1)
+    #Create empty array to store data in
+    data = np.empty((0,3))
+    #While loop to make sure the user returns to the menu of the interface
+    while True:
+        #Get the users input on what they want the program to do
+        choice = input("\nPlease choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
+        if choice == "1":
+            #If they want to load data into the data, call the tryLoad method, save the returned data in the data variable
+            data = tryLoad()
+        elif choice == "2":
+            #If they want to filter the data, call the filter method with data as parameter, save the returned data in the data variable
+            data = filter(data)
+        elif choice == "3":
+            #If they want to compute stats based on the data, call the tryStats method with data as a parameter
+            tryStats(data)
+        elif choice == "4":
+            #If they want to plot the data, try to call the dataPlot method with data as a parameter
+            try:
+                dataPlot(data)
+            except:
+                #This throws an exception if the data variable doesn't contain any data, and in that case, print that there are no eligible data to plot
+                print("No eligible data to plot, please load data first.\n")
+        elif choice == "5":
+            #If they want to quit the program, break the while-loop
+            break
+        else:
+            #If none of the given options were chosen as an input, print that they gave an ineligible input
+            print("Ineligible input, please try again.")
