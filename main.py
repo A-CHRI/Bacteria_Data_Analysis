@@ -134,7 +134,7 @@ def temperatureFilter(data):
         print("\nPlease enter the temperature range you would like to filter by, and enter 'done' to continue")
         tempMin = input("\nMinimum Temperature: ")
         tempMax = input("Maximum Temperature: ")
-        if tempMin == "done" or tempMax == "done":
+        if tempMin.casefold() == "done" or tempMax.casefold() == "done":
             break
         else:
             try:
@@ -169,7 +169,7 @@ def bacteriaFilter(data):
             print(i+1, ":", v)
 
         inp = input("\nBacteria: ")
-        if inp == "done":
+        if inp.casefold() == "done":
             print("\nThe filter has been applied")
             break
 
@@ -198,7 +198,7 @@ def growthRateFilter(data):
         print("\nPlease enter the growthrate range you would like to filter by, and enter 'done' to continue (decimals are set with a dot ('.')")
         growthMin = input("\nLower bound: ")
         growthMax = input("Upper bound: ")
-        if growthMin == "done" or growthMax == "done":
+        if growthMin.casefold() == "done" or growthMax.casefold() == "done":
             break
         else:
             try:
@@ -234,7 +234,7 @@ def filter(data):
             print(i+1, ":", v)
 
         inp = input("\nInput: ")
-        if inp == "done":
+        if inp.casefold() == "done":
             break
 
         if inp in ["1","2","3"]:
