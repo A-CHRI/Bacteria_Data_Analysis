@@ -117,13 +117,6 @@ def dataPlot(data):
 
 
 ### Filter function ###
-# Creates a list for the different filters, and creates a list of the different applied filters
-filters = ["Bacteria", "Temperature", "Growth rate"]
-appliedFilters = []
-
-# Creates a list of the different bacteria, and creates a list of the different applied bacteria filters
-bacteria = ["Salmonella enterica", "Bascillus cereus", "Listeria", "Brochothrix thermosphacta"]
-appliedBacteria = []
 
 # Functions for the various filters
 def temperatureFilter(data):
@@ -153,26 +146,32 @@ def temperatureFilter(data):
     return data
 
 def bacteriaFilter(data):
+    bacteria = ["Salmonella enterica", "Bascillus cereus", "Listeria", "Brochothrix thermosphacta"]
     while True:
         # Creates a seperator for the layout
         print("\n---------------------------------------")
         # Prompts the user to apply or unapply the varous filters
         print("\nYou are about to filter the following bacteria:")
+
+        # Prints the already filtered bacteria
         if len(appliedBacteria) > 0:
             for i,v in enumerate(appliedBacteria):
                 print(i+1, ":", v)
         else:
             print("None")
 
+        # Prints the list of bacteria to choose from
         print("\nPlease enter the bacteria you would like to add or remove from the filter, and enter 'done' to continue (Choose by entering the corresponding number)")
         for i,v in enumerate(bacteria):
             print(i+1, ":", v)
 
+        # Gets the users input
         inp = input("\nBacteria: ")
         if inp.casefold() == "done":
             print("\nThe filter has been applied")
             break
-
+        
+        # If the input matches a bacterias number, add the bacteria to the list of applied bacteria-filters, or remove it if it already was in the list
         if inp in ["1","2","3","4"]:
             intc = int(inp) - 1
             if bacteria[intc] in appliedBacteria:
@@ -180,12 +179,14 @@ def bacteriaFilter(data):
                 print("\nRemoved bacteria filter for", bacteria[intc])
             else:
                 appliedBacteria.append(bacteria[intc])
-                print("\nAdded bacteira filter for", bacteria[intc])
-        
+                print("\nAdded bacteria filter for", bacteria[intc])
+    
+    # Get the filtered bacterias corresponding numbers
     bactNumbs = []
     for i in appliedBacteria:
         bactNumbs.append(bacteria.index(i)+1)
 
+    # Filter the bacterias that aren't chosen from the data
     mask = np.isin(data[:,2], bactNumbs)
     print("\nSuccesfully applied the filters.")
     return data[mask]
@@ -218,6 +219,7 @@ def growthRateFilter(data):
 
 #This method takes a nx3 matrix of data as parameter, and filters the data based upon input from the user
 def filter(data):
+    filters = ["Bacteria", "Temperature", "Growth rate"]
     while True:
         # Creates a seperator for the layout
         print("\n---------------------------------------")
@@ -316,6 +318,12 @@ if __name__ == '__main__':
     data = np.empty((0,3))
     dataRef = np.array([])
 
+    # Creates a list for the different filters, and creates a list of the different applied filters
+    appliedFilters = []
+
+    # Creates a list of the different bacteria, and creates a list of the different applied bacteria filters
+    appliedBacteria = []
+    
     #While loop to make sure the user returns to the menu of the interface
     while True:
         # Creates a seperator for the layout
