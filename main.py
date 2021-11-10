@@ -1,6 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from numpy.lib import emath
 
+### DataLoad function ###
 #This method takes a string as parameter, and reads a file based on the given string, then returns a matrix of data read from the string
 def dataLoad (filename):
     #Create empty matrix of correct dimensions, set number to give linenumber for errors in the data
@@ -31,6 +33,7 @@ def dataLoad (filename):
             data = np.append(data, np.array([bacteria]), axis=0)
     return data
     
+### DataStatistics functions ###
 #This method takes a nx3 matrix of data and a string as parameter, and returns a statistic from the data. Which statistic gets returned is based on the string
 def dataStatistics(data, statistic):
     #If there are no rows in the data, return 0
@@ -75,6 +78,7 @@ def dataStatistics(data, statistic):
         else:
             return 0
 
+### DataPlot functions ###
 #This method takes a nx3 matrix of data as parameter, and makes 2 plots of the data, 1 barchart of the bacteria types, 1 graph of the ratio between temperature and growth rate
 def dataPlot(data):
     #Count sample size for each bacteria
@@ -113,52 +117,150 @@ def dataPlot(data):
     graph.set_ylabel("Growth Rate")
     plt.show()
 
-#This method takes a nx3 matrix of data as parameter, and filters the data based upon input from the user
-def filter(data):
-    #Get the users input on how the data should be filtered
-    print("How would you like to filter your data? Choose by writing the corresponding number.")
-    filterInput = input("1. By bacteria.\n2. By Growth rate\n3. By Temperature\n")
-    #Here we make sure to catch any error based on input formatted wrong
-    try: 
-        if int(filterInput) == 1:
-            #If the user chose to filter the data by bacteria type, get their input on which bacteria types should be included, put the choices into an array
-            bactType = input("Which bacteria type would you like to see? Choose by writing the corresponding number, you may choose several by seperating the numbers with space.\n1. Salmonella enterica\n2. Bascillus cereus\n3. Listeria\n4. Brochothrix thermosphacta\n")
-            bactTypeList = np.array(bactType.split(" "))
-            bactTypeList = bactTypeList.astype(float)
-            #Check if each element in the 3rd column of the data are in the list of chosen types, save a copy of the list with true/false values for each of the elements based on whether they were chosen or not
-            mask = np.isin(data[:,2], bactTypeList)
-            #Save the rows of data with true values in the mask-list, remove the rows with false values, print that the filter was applied
-            data = data[mask]
-            print("Your data has been filtered successfully.")
-        elif int(filterInput) == 2:
-            #If the user chose to filter the data by a growth rate interval, get their input on what interval should be included, put the lower and upper bound into a list
-            growthInterval = input("What are the lower and upper bound for the Growth rate you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
-            growthIntervalList = np.array(growthInterval.split(" "))
-            growthIntervalList = growthIntervalList.astype(float)
-            #Save the rows of data with values in the second column between the bounds of the interval, remove the other rows, print that the filter was applied
-            data = data[:][(data[:,1] >= growthIntervalList[0]) & (data[:,1] <= growthIntervalList[1])]
-            print("Your data has been filtered successfully.")
-        elif int(filterInput) == 3:
-            #If the user chose to filter the data by a temperature interval, get their input on what interval should be included, put the lower and upper bound into a list
-            tempInterval = input("What are the lower and upper bound for the Temperature you want to see? Choose by writing the numbers seperated by a space, decimals are set with a dot (.).\n")
-            tempIntervalList = np.array(tempInterval.split(" "))
-            tempIntervalList = tempIntervalList.astype(float)
-            #Save the rows of data with values in the first column between the bounds of the interval, remove the other rows, print that the filter was applied
-            data = data[:][(data[:,0] >= tempIntervalList[0]) & (data[:,0] <= tempIntervalList[1])]
-            print("Your data has been filtered successfully.")
+### Filter function ###
+# Creates a list for the different filters, and creates a list of the different applied filters
+filters = ["Bacteria", "Temperature", "Growth rate"]
+appliedFilters = []
+
+# Creates a list of the different bacteria, and creates a list of the different applied bacteria filters
+bacteria = ["Salmonella enterica", "Bascillus cereus", "Listeria", "Brochothrix thermosphacta"]
+appliedBacteria = []
+
+# Functions for the various filters
+def temperatureFilter(data):
+    while True:
+        # Creates a seperator for the layout
+        print("\n---------------------------------------")
+        # Prompts the user to enter the temperature range
+        print("\nPlease enter the temperature range you would like to filter by, and enter 'done' to continue")
+        tempMin = input("\nMinimum Temperature: ")
+        tempMax = input("Maximum Temperature: ")
+        if tempMin == "done" or tempMax == "done":
+            break
         else:
-            #If their choice was another integer than 1-3, print invalid input, give a choice to try again
-            inp = input("Invalid input. Would you like to try again? (y/n)\n")
-            if inp.casefold() == "y":
-                data = filter(data)
-    except:
-        #If any of the inputs were formatted incorrectly, catch the resulting error, and print invalid input, give a choice to try again
-        inp = input("Invalid input. Would you like to try again? (y/n)\n")
-        if inp.casefold() == "y":
-            data = filter(data)
-    #Return the filtered (or unfiltered) data
+            tempMin = int(tempMin)
+            tempMax = int(tempMax)
+            if tempMin > tempMax:
+                print("\nInvalid input, please try again.")
+            else:
+                break
+    # Filters the data based on the temperature range
+    data = data[data[:,2].astype(float) >= tempMin]
+    data = data[data[:,2].astype(float) <= tempMax]
+    print("\nSuccesfully applied the filter.")
     return data
 
+def bacteriaFilter(data):
+    while True:
+        # Creates a seperator for the layout
+        print("\n---------------------------------------")
+        # Prompts the user to apply or unapply the varous filters
+        print("\nYou are about to filter the following bacteria:")
+        if len(appliedBacteria) > 0:
+            for i,v in enumerate(appliedBacteria):
+                print(i+1, ":", v)
+        else:
+            print("None")
+
+        print("\nPlease enter the bacteria you would like to add or remove from the filter, and enter 'done' to continue (Choose by entering the corresponding number)")
+        for i,v in enumerate(bacteria):
+            print(i+1, ":", v)
+
+        inp = input("\nBacteria: ")
+        if inp == "done":
+            print("\nThe filter has been applied")
+            break
+
+        if inp in ["1","2","3","4"]:
+            intc = int(inp) - 1
+            if bacteria[intc] in appliedBacteria:
+                appliedBacteria.remove(bacteria[intc])
+                print("\nRemoved bacteria filter for", bacteria[intc])
+            else:
+                appliedBacteria.append(bacteria[intc])
+                print("\nAdded bacteira filter for", bacteria[intc])
+        
+    bactNumbs = []
+    for i in appliedBacteria:
+        bactNumbs.append(bacteria.index(i))
+
+    mask = np.isin(data[:,2], bactNumbs)
+    print("\nSuccesfully applied the filters.")
+    return data[mask]
+
+def growthRateFilter(data):
+    while True:
+        # Creates a seperator for the layout
+        print("\n---------------------------------------")
+        # Prompts the user to enter the growthrate range
+        print("\nPlease enter the growthrate range you would like to filter by, and enter 'done' to continue (decimals are set with a dot ('.')")
+        growthMin = input("\nLower bound: ")
+        growthMax = input("Upper bound: ")
+        if growthMin == "done" or growthMax == "done":
+            break
+        else:
+            growthMin = float(growthMin)
+            growthMax = float(growthMax)
+            if growthMin > growthMax:
+                print("\nInvalid input, please try again.")
+            else:
+                break
+    # Filters the data based on the temperature range
+    data = data[data[:,1].astype(float) >= growthMin]
+    data = data[data[:,1].astype(float) <= growthMax]
+    print("\nSuccesfully applied the filter.")
+    return data
+
+#This method takes a nx3 matrix of data as parameter, and filters the data based upon input from the user
+def filter(data):
+    while True:
+        # Creates a seperator for the layout
+        print("\n---------------------------------------")
+        # Prompts the user to apply or unapply the varous filters
+        print("\nYou are about to apply the following filters:")
+        if len(appliedFilters) > 0:
+            for i,v in enumerate(appliedFilters):
+                print(i+1, ":", v)
+        else:
+            print("None")
+
+        print("\nPlease enter the filter you would like to apply or unapply, and enter 'done' to continue (Choose by entering the corresponding number)")
+        for i,v in enumerate(filters):
+            print(i+1, ":", v)
+
+        inp = input("\nInput: ")
+        if inp == "done":
+            break
+
+        if inp in ["1","2","3"]:
+            intc = int(inp) - 1 
+            # Applies or unapplies the filter based upon the user's input
+            if filters[intc] in appliedFilters:
+                appliedFilters.remove(filters[intc])
+                print("\nFilter removed")
+            else:
+                appliedFilters.append(filters[intc])
+                print("\nFilter applied")
+
+        else:
+            print("\nInvalid input, please try again.")
+
+    # Filters the data based on the list of applied filters
+    if len(appliedFilters) > 0:
+        for i in appliedFilters:
+            if i == "Bacteria":
+                data = bacteriaFilter(data)
+            elif i == "Temperature":
+                data = temperatureFilter(data)
+            elif i == "Growth rate":
+                data = growthRateFilter(data)
+    else:
+        print("No filters was applied.")
+
+    # Returns the filtered data
+    return data
+
+## Tryload function ##
 #This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
 def tryLoad():
     #Get the users input
@@ -175,6 +277,7 @@ def tryLoad():
         if inp.casefold() == "y":
             return tryLoad()
 
+### TryStats function ###
 #This method tries to use the dataStatistics method, and in case the user doesnt give a suitable input, catch the error
 def tryStats(data):
     #Get the users input, make a list with the statistic names
@@ -190,20 +293,20 @@ def tryStats(data):
             tryStats(data)
 
     
-
-#Old function to make the interface before we read that the interface couldn't be made as a function.
+### Old main function ###
+# Old function to make the interface before we read that the interface couldn't be made as a function.
 def menu(data):
-    choice = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
-    if choice == "1":
+    inp = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
+    if inp == "1":
         data = tryLoad()
         menu(data)
-    if choice == "2":
+    if inp == "2":
         data = filter(data)
         menu(data)
-    if choice == "3":
+    if inp == "3":
         tryStats(data)
         menu(data)
-    if choice == "4":
+    if inp == "4":
         try:
             dataPlot(data)
             menu(data)
@@ -213,7 +316,7 @@ def menu(data):
     else:
         return
 
-
+### Main Script ###
 #Main Script, only runs if the file is run directly, this isn't executed if the file is imported to use as a library
 if __name__ == '__main__':
     #Create empty array to store data in
@@ -221,24 +324,24 @@ if __name__ == '__main__':
     #While loop to make sure the user returns to the menu of the interface
     while True:
         #Get the users input on what they want the program to do
-        choice = input("\nPlease choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
-        if choice == "1":
+        inp = input("\nPlease choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
+        if inp == "1":
             #If they want to load data into the data, call the tryLoad method, save the returned data in the data variable
             data = tryLoad()
-        elif choice == "2":
+        elif inp == "2":
             #If they want to filter the data, call the filter method with data as parameter, save the returned data in the data variable
             data = filter(data)
-        elif choice == "3":
+        elif inp == "3":
             #If they want to compute stats based on the data, call the tryStats method with data as a parameter
             tryStats(data)
-        elif choice == "4":
+        elif inp == "4":
             #If they want to plot the data, try to call the dataPlot method with data as a parameter
             try:
                 dataPlot(data)
             except:
                 #This throws an exception if the data variable doesn't contain any data, and in that case, print that there are no eligible data to plot
                 print("No eligible data to plot, please load data first.\n")
-        elif choice == "5":
+        elif inp == "5":
             #If they want to quit the program, break the while-loop
             break
         else:
