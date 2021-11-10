@@ -254,8 +254,6 @@ def filter(data):
                 data = temperatureFilter(data)
             elif i == "Growth rate":
                 data = growthRateFilter(data)
-    else:
-        print("No filters was applied.")
 
     # Returns the filtered data
     return data
@@ -263,8 +261,11 @@ def filter(data):
 ## Tryload function ##
 #This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
 def tryLoad():
+    # Creates a seperator for the layout
+    print("\n---------------------------------------")
     #Get the users input
-    filename = input("Please input the filename including .txt (ex. file.txt):\n")
+    print("Please enter the filename of the files you wish to load including .txt (ex file.txt).")
+    filename = input("\nFilename: ")
     #Try to load the file
     try:
         data = dataLoad(filename)
@@ -278,11 +279,16 @@ def tryLoad():
             return tryLoad()
 
 ### TryStats function ###
+statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
 #This method tries to use the dataStatistics method, and in case the user doesnt give a suitable input, catch the error
 def tryStats(data):
+    # Creates a seperator for the layout
+    print("\n---------------------------------------")
     #Get the users input, make a list with the statistic names
-    inp = input("Please input the statistic you want to have calculated by entering the corresponding number. Your options are as follows:\n1. Mean Temperature.\n2. Mean Growth rate.\n3. Standard deviation of Temperature.\n4. Standard deviation of Growth rate.\n5. Number of samples.\n6. Mean Growth rate for cold samples.\n7. Mean Growth rate for hot samples.\n")
-    statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
+    print("\nPlease enter the correspoinding number to the statistic you want calculated.")
+    for i,v in enumerate(statistics):
+        print(i+1, ":", v)
+    inp = input("\nStatistic: ")
     #Try to get the statistic based on the input, and print it out if it works
     try:
         print(str(dataStatistics(data, f"{statistics[int(inp)-1]}")) + " is the computed " + str(statistics[int(inp)-1]) + "\n")
@@ -317,23 +323,38 @@ def menu(data):
         return
 
 ### Main Script ###
+# List of options in the main menu
+options = ["Load data", "Filter data", "Display statistics", "Generate plots", "Quit"]
+
 #Main Script, only runs if the file is run directly, this isn't executed if the file is imported to use as a library
 if __name__ == '__main__':
     #Create empty array to store data in
     data = np.empty((0,3))
+    dataRef = np.array([])
+
     #While loop to make sure the user returns to the menu of the interface
     while True:
-        #Get the users input on what they want the program to do
-        inp = input("\nPlease choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
+        # Creates a seperator for the layout
+        print("\n---------------------------------------")
+        # Prints the options in the menu, and gets the users input
+        print("\nPlease choose one of the following options by entering its corresponding number:\n")
+        for i,v in enumerate(options):
+            print(i+1, ":", v)
+        inp = input("\nInput: ")
+
         if inp == "1":
             #If they want to load data into the data, call the tryLoad method, save the returned data in the data variable
             data = tryLoad()
+            dataRef = np.array(data, copy=True)
+
         elif inp == "2":
             #If they want to filter the data, call the filter method with data as parameter, save the returned data in the data variable
-            data = filter(data)
+            data = filter(dataRef)
+
         elif inp == "3":
             #If they want to compute stats based on the data, call the tryStats method with data as a parameter
             tryStats(data)
+
         elif inp == "4":
             #If they want to plot the data, try to call the dataPlot method with data as a parameter
             try:
@@ -341,9 +362,11 @@ if __name__ == '__main__':
             except:
                 #This throws an exception if the data variable doesn't contain any data, and in that case, print that there are no eligible data to plot
                 print("No eligible data to plot, please load data first.\n")
+
         elif inp == "5":
             #If they want to quit the program, break the while-loop
             break
+
         else:
             #If none of the given options were chosen as an input, print that they gave an ineligible input
             print("Ineligible input, please try again.")
