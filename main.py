@@ -87,35 +87,34 @@ def dataPlot(data):
     c_3 = np.count_nonzero(data[:, 2] == 3)
     c_4 = np.count_nonzero(data[:, 2] == 4)
 
-    #Start subplot for bar-chart
-    bar = plt.subplots()[1]
+    fig, (ax1,ax2) = plt.subplots(1, 2)
+    fig.set_size_inches(12, 6)
+    fig.suptitle("Bacteria data analysis")
 
     #List names of bacteria, and names for x- and y-axis
     names = ["Salmonella\nenterica", "Bascillus cereus", "Listeria", "Brochothrix\nthermosphacta"]
-    bar.set_xlabel("Bacteria Type")
-    bar.set_ylabel("Number of samples")
+    ax1.set_xlabel("Bacteria Type")
+    ax1.set_ylabel("Number of samples")
 
     #Plot and show the bar-chart
-    plt.bar(names, [c_1, c_2, c_3, c_4])
+    ax1.bar(names, [c_1, c_2, c_3, c_4])
 
-    # Start subplot for Growth Rate by Temperature
-    graph = plt.subplots()[1]
-
-    #Set axis sizes
-    plt.axis([10,60,0,1.5])
+    # #Set axis sizes
+    # ax1.axis([10,60,0,1.5])
 
     #Sort the data after temperature
     datasort = data[np.argsort(data[:, 0])]
 
     #Plot each type of bacteria with points and graph, add color-label
     for i in range(4):
-        plt.plot(datasort[np.where(datasort[:, 2] == i+1)][:, 0], datasort[np.where(datasort[:, 2] == i+1)][:, 1], marker='o', label=str(names[i]))
+        ax2.plot(datasort[np.where(datasort[:, 2] == i+1)][:, 0], datasort[np.where(datasort[:, 2] == i+1)][:, 1], marker='o', label=str(names[i]))
 
     #Show color-labels, set names for x- and y-axis, and plot/show the graph
-    plt.legend()
-    graph.set_xlabel("Temperature")
-    graph.set_ylabel("Growth Rate")
-    plt.show()
+    ax2.legend()
+    ax2.set_xlabel("Temperature")
+    ax2.set_ylabel("Growth Rate")
+    fig.show()
+
 
 ### Filter function ###
 # Creates a list for the different filters, and creates a list of the different applied filters
@@ -258,6 +257,7 @@ def filter(data):
     # Returns the filtered data
     return data
 
+
 ## Tryload function ##
 #This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
 def tryLoad():
@@ -277,6 +277,7 @@ def tryLoad():
         inp = input("Ineligible filename. Would you like to try again? (y/n)\n")
         if inp.casefold() == "y":
             return tryLoad()
+
 
 ### TryStats function ###
 statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
@@ -298,29 +299,6 @@ def tryStats(data):
         if inp.casefold() == "y":
             tryStats(data)
 
-    
-### Old main function ###
-# Old function to make the interface before we read that the interface couldn't be made as a function.
-def menu(data):
-    inp = input("Please choose one of the following options by entering its corresponding number:\n1. Load data\n2. Filter data\n3. Display statistics\n4. Generate plots\n5. Quit\n")
-    if inp == "1":
-        data = tryLoad()
-        menu(data)
-    if inp == "2":
-        data = filter(data)
-        menu(data)
-    if inp == "3":
-        tryStats(data)
-        menu(data)
-    if inp == "4":
-        try:
-            dataPlot(data)
-            menu(data)
-        except:
-            print("No eligible data to plot, please load data first.\n")
-            menu(data)
-    else:
-        return
 
 ### Main Script ###
 # List of options in the main menu
