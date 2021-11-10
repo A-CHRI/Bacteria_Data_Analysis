@@ -184,7 +184,7 @@ def bacteriaFilter(data):
         
     bactNumbs = []
     for i in appliedBacteria:
-        bactNumbs.append(bacteria.index(i))
+        bactNumbs.append(bacteria.index(i)+1)
 
     mask = np.isin(data[:,2], bactNumbs)
     print("\nSuccesfully applied the filters.")

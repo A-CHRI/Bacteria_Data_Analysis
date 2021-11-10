@@ -31,8 +31,8 @@ def temperatureFilter(data):
             except:
                 print("\nInvalid input, please try again.")
     # Filters the data based on the temperature range
-    data = data[data[:,2].astype(float) >= tempMin]
-    data = data[data[:,2].astype(float) <= tempMax]
+    data = data[data[:,0].astype(float) >= tempMin]
+    data = data[data[:,0].astype(float) <= tempMax]
     print("\nSuccesfully applied the filter.")
     return data
 
@@ -68,7 +68,7 @@ def bacteriaFilter(data):
         
     bactNumbs = []
     for i in appliedBacteria:
-        bactNumbs.append(bacteria.index(i))
+        bactNumbs.append(bacteria.index(i)+1)
 
     mask = np.isin(data[:,2], bactNumbs)
     print("\nSuccesfully applied the filters.")
