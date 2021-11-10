@@ -21,12 +21,15 @@ def temperatureFilter(data):
         if tempMin == "done" or tempMax == "done":
             break
         else:
-            tempMin = int(tempMin)
-            tempMax = int(tempMax)
-            if tempMin > tempMax:
+            try:
+                tempMin = int(tempMin)
+                tempMax = int(tempMax)
+                if tempMin > tempMax:
+                    print("\nInvalid input, please try again.")
+                else:
+                    break
+            except:
                 print("\nInvalid input, please try again.")
-            else:
-                break
     # Filters the data based on the temperature range
     data = data[data[:,2].astype(float) >= tempMin]
     data = data[data[:,2].astype(float) <= tempMax]
@@ -82,12 +85,15 @@ def growthRateFilter(data):
         if growthMin == "done" or growthMax == "done":
             break
         else:
-            growthMin = float(growthMin)
-            growthMax = float(growthMax)
-            if growthMin > growthMax:
+            try:
+                growthMin = float(growthMin)
+                growthMax = float(growthMax)
+                if growthMin > growthMax:
+                    print("\nInvalid input, please try again.")
+                else:
+                    break
+            except:
                 print("\nInvalid input, please try again.")
-            else:
-                break
     # Filters the data based on the temperature range
     data = data[data[:,1].astype(float) >= growthMin]
     data = data[data[:,1].astype(float) <= growthMax]
