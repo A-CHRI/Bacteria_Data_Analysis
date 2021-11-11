@@ -1,8 +1,16 @@
 import numpy as np
 from matplotlib import pyplot as plt
 from numpy.lib import emath
+### Project Bacteria Data Analysis ###
+# s214656 #
+# s214614 #
+# s214618 #
+
+# The Numpy-library's documentation has been a much used source in the development of this script
 
 ### DataLoad function ###
+# Erik has worked on this method
+
 #This method takes a string as parameter, and reads a file based on the given string, then returns a matrix of data read from the string
 def dataLoad (filename):
     #Create empty matrix of correct dimensions, set number to give linenumber for errors in the data
@@ -34,6 +42,8 @@ def dataLoad (filename):
     return data
     
 ### DataStatistics functions ###
+# Erik has worked on this method
+
 #This method takes a nx3 matrix of data and a string as parameter, and returns a statistic from the data. Which statistic gets returned is based on the string
 def dataStatistics(data, statistic):
     #If there are no rows in the data, return 0
@@ -79,6 +89,8 @@ def dataStatistics(data, statistic):
             return 0
 
 ### DataPlot functions ###
+# Erik has worked on this method
+
 #This method takes a nx3 matrix of data as parameter, and makes 2 plots of the data, 1 barchart of the bacteria types, 1 graph of the ratio between temperature and growth rate
 def dataPlot(data):
     #Count sample size for each bacteria
@@ -267,6 +279,8 @@ def filter(data):
 
 
 ## Tryload function ##
+# Erik has worked on this method
+
 #This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
 def tryLoad():
     # Creates a seperator for the layout
@@ -288,9 +302,11 @@ def tryLoad():
 
 
 ### TryStats function ###
-statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
+# Erik has worked on this method
+
 #This method tries to use the dataStatistics method, and in case the user doesnt give a suitable input, catch the error
 def tryStats(data):
+    statistics = ["Mean Temperature", "Mean Growth rate", "Std Temperature", "Std Growth rate", "Rows", "Mean Cold Growth rate", "Mean Hot Growth rate"]
     # Creates a seperator for the layout
     print("\n---------------------------------------")
     #Get the users input, make a list with the statistic names
@@ -309,8 +325,7 @@ def tryStats(data):
 
 
 ### Main Script ###
-# List of options in the main menu
-options = ["Load data", "Filter data", "Display statistics", "Generate plots", "Quit"]
+# Erik has worked on this script
 
 #Main Script, only runs if the file is run directly, this isn't executed if the file is imported to use as a library
 if __name__ == '__main__':
@@ -323,7 +338,10 @@ if __name__ == '__main__':
 
     # Creates a list of the different bacteria, and creates a list of the different applied bacteria filters
     appliedBacteria = []
-    
+
+    # List of options in the main menu
+    options = ["Load data", "Filter data", "Display statistics", "Generate plots", "Quit"]
+
     #While loop to make sure the user returns to the menu of the interface
     while True:
         # Creates a seperator for the layout
