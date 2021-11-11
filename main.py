@@ -6,10 +6,11 @@ from numpy.lib import emath
 # s214614 #
 # s214618 #
 
+# We have all worked on every part of the script in an iterative process, starting with rough sketches of each method, slowly refining through testing and optimization
+
 # The Numpy-library's documentation has been a much used source in the development of this script
 
 ### DataLoad function ###
-# Erik has worked on this method
 
 #This method takes a string as parameter, and reads a file based on the given string, then returns a matrix of data read from the string
 def dataLoad (filename):
@@ -42,7 +43,6 @@ def dataLoad (filename):
     return data
     
 ### DataStatistics functions ###
-# Erik has worked on this method
 
 #This method takes a nx3 matrix of data and a string as parameter, and returns a statistic from the data. Which statistic gets returned is based on the string
 def dataStatistics(data, statistic):
@@ -89,7 +89,6 @@ def dataStatistics(data, statistic):
             return 0
 
 ### DataPlot functions ###
-# Erik has worked on this method
 
 #This method takes a nx3 matrix of data as parameter, and makes 2 plots of the data, 1 barchart of the bacteria types, 1 graph of the ratio between temperature and growth rate
 def dataPlot(data):
@@ -279,7 +278,6 @@ def filter(data):
 
 
 ## Tryload function ##
-# Erik has worked on this method
 
 #This method tries to use the dataLoad method, and in case the user doesnt give a suitable input, catch the error
 def tryLoad():
@@ -302,7 +300,6 @@ def tryLoad():
 
 
 ### TryStats function ###
-# Erik has worked on this method
 
 #This method tries to use the dataStatistics method, and in case the user doesnt give a suitable input, catch the error
 def tryStats(data):
@@ -325,7 +322,6 @@ def tryStats(data):
 
 
 ### Main Script ###
-# Erik has worked on this script
 
 #Main Script, only runs if the file is run directly, this isn't executed if the file is imported to use as a library
 if __name__ == '__main__':
